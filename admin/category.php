@@ -156,8 +156,7 @@ $s_sql = $conn -> query($select_sql);
                                         <?php }?>
                                         <?php }else{ ?>
                                         <tr>
-                                            <td colspan="2">No data to show</td>
-                                                                 
+                                            <td colspan="2">No data to show</td>                   
                                         </tr>
                                         <?php } ?>
                                     </tbody>
