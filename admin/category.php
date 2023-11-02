@@ -144,6 +144,7 @@ $s_sql = $conn -> query($select_sql);
                                         <tr>
                                             <th>Name</th>
                                             <th>Icon</th>   
+                                            <th>Action</th>   
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -152,6 +153,10 @@ $s_sql = $conn -> query($select_sql);
                                         <tr>
                                             <td><?php echo $final ['name']?></td>
                                             <td><?php echo $final ['icon']?></td>
+                                            <td>
+                                                <a href="#">Edit</a>
+                                                <a href="c_delete.php?id=<?php echo $final ['id'];?>">Delete</a>
+                                            </td>
                                         </tr>
                                         <?php }?>
                                         <?php }else{ ?>

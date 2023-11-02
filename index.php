@@ -47,7 +47,6 @@
                   <a class="nav-link" href="#">FAQ</a>
                 </li>
               </ul>
-              
             </div>
           </div>
         </nav>
