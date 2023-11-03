@@ -2,32 +2,16 @@
 // db connection 
 include "../lib/connection.php";
 
-// data insert 
-
-$result = null;
-if (isset($_POST['c_submit'])){
-
-    $name = $_POST['c_name'];
-    $icon = $_POST['c_icon'];
-
-    // echo $name ." ". $icon;
-
-    $insert_sql = "INSERT INTO category( name, icon) VALUES ('$name','$icon')";
-
-    if($conn -> query($insert_sql)){
-
-       $result = "<h3 class='text-success'>Data inserted successfully!</h3>";
-
-    }else{
-        die($conn -> error);
-    }
-}
 // select sql 
-$select_sql = "SELECT * FROM category ";
 
-$s_sql = $conn -> query($select_sql);
+if (isset($_GET['id'])){
+    $e_id = $_GET['id'];
 
-//  echo $s_sql -> num_rows;
+    $select_sql = "SELECT * FROM category WHERE id= $e_id";
+
+    $s_sql = $conn -> query($select_sql);
+
+    if ($s_sql -> num_rows > 0){
 
 ?>
 
@@ -105,7 +89,7 @@ $s_sql = $conn -> query($select_sql);
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Category</h1>
+                        <h1 class="mt-4">Edit Category</h1>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item"><a href="admin.php">Dashboard</a></li>
                             <li class="breadcrumb-item active">Category</li>
@@ -128,46 +112,11 @@ $s_sql = $conn -> query($select_sql);
                        </div>
 
             </form>
-            <div class="result">
-                <?php
-                echo  $result ;
-                
-                ?>
+        
+              
             </div>
                         </div>
-                        <div class="card mb-4">
-                           
-                            <div class="card-body">
-                                <h4>Catagory Info</h4>
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Icon</th>   
-                                            <th>Action</th>   
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php if ($s_sql -> num_rows>0){ ?>
-                                            <?php while ($final =  $s_sql -> fetch_assoc()) {  ?>
-                                        <tr>
-                                            <td><?php echo $final ['name']?></td>
-                                            <td><?php echo $final ['icon']?></td>
-                                            <td>
-                                                <a href="c_edit.php?id=<?php echo $final ['id'];?>">Edit</a>
-                                                <a href="c_delete.php?id=<?php echo $final ['id'];?>">Delete</a>
-                                            </td>
-                                        </tr>
-                                        <?php }?>
-                                        <?php }else{ ?>
-                                        <tr>
-                                            <td colspan="2">No data to show</td>                   
-                                        </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                      
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
@@ -190,3 +139,9 @@ $s_sql = $conn -> query($select_sql);
         <script src="js/datatables-simple-demo.js"></script>
     </body>
 </html>
+<?php
+     }
+}else{
+    header('Location:category.php');
+}
+?>
