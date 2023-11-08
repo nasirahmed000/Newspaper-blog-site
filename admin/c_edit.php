@@ -1,9 +1,21 @@
 <?php
 // db connection 
 include "../lib/connection.php";
+// update sql 
+if (isset($_POST['u_submit'])){
+    $name = $_POST['c_name'];
+    $icon = $_POST['c_icon'];
+    $uid  = $_POST['u_id'];
+
+    $update_sql = "UPDATE category SET name = '$name', icon='$icon' WHERE id = $uid ";
+    if ( $conn -> query($update_sql )){
+        header('Location:category.php');
+    }else{
+        $conn -> error;
+    }
+}
 
 // select sql 
-
 if (isset($_GET['id'])){
     $e_id = $_GET['id'];
 
@@ -11,7 +23,8 @@ if (isset($_GET['id'])){
 
     $s_sql = $conn -> query($select_sql);
 
-    if ($s_sql -> num_rows > 0){
+    if ($s_sql -> num_rows > 0){   
+        while ($final= $s_sql -> fetch_assoc()){
 
 ?>
 
@@ -99,15 +112,17 @@ if (isset($_GET['id'])){
             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                                 
                             <div class="mb-3">
+                                <input type="hidden" name="u_id" value="<?php echo $final ['id']?>" >
+
                                <label for="c_name" class="form-label">Category Name</label>
-                                <input type="text" class="form-control c_name" id="c_name" name="c_name" required>
+                                <input type="text" value="<?php echo $final ['name']?>" class="form-control c_name" id="c_name" name="c_name" required>
                             </div>
                             <div class="mb-3">
                                <label for="c_icon" class="form-label">Category Icon</label>
-                                <input type="text" class="form-control c_icon" id="c_icon" name="c_icon" required>
+                                <input type="text" value="<?php echo $final ['icon']?>" class="form-control c_icon" id="c_icon" name="c_icon" required>
                             </div>
                        <div class="mb-2">
-                       <button class=" btn btn-dark" type="submit" name="c_submit">Submit</button>
+                       <button class=" btn btn-dark" type="submit" name="u_submit">Update</button>
                         <button class="btn btn-danger" type="reset">Reset</button>
                        </div>
 
@@ -140,6 +155,9 @@ if (isset($_GET['id'])){
     </body>
 </html>
 <?php
+             }
+     }else{
+        header('Location:category.php');
      }
 }else{
     header('Location:category.php');

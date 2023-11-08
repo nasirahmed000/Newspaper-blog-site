@@ -1,3 +1,36 @@
+<?php
+// db connection 
+include "../lib/connection.php";
+
+// data insert 
+
+$result = null;
+if (isset($_POST['c_submit'])){
+
+    $name = $_POST['c_name'];
+    $icon = $_POST['c_icon'];
+
+    // echo $name ." ". $icon;
+
+    $insert_sql = "INSERT INTO category( name, icon) VALUES ('$name','$icon')";
+
+    if($conn -> query($insert_sql)){
+
+       $result = "<h3 class='text-success'>Data inserted successfully!</h3>";
+
+    }else{
+        die($conn -> error);
+    }
+}
+// select sql 
+$select_sql = "SELECT * FROM category ";
+
+$s_sql = $conn -> query($select_sql);
+
+//  echo $s_sql -> num_rows;
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -7,6 +40,7 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>BDNEWS24</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
     </head>
@@ -42,22 +76,22 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                         <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link active" href="admin.php">
+                            <a class="nav-link " href="admin.php">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Pages</div>
                            
-                            <a class="nav-link" href="category.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            <a class="nav-link active" href="category.php">
+                                <div class="sb-nav-link-icon "><i class="fas fa-table"></i></div>
                                 Category
                             </a>
                             <a class="nav-link" href="#">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 News
                             </a>
-                            <a class="nav-link active" href="charts.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            <a class="nav-link " href="charts.html">
+                                <div  class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Charts
                             </a>
                         </div>
@@ -71,46 +105,67 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Charts</h1>
+                        <h1 class="mt-4">News</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Charts</li>
+                            <li class="breadcrumb-item"><a href="admin.php">Dashboard</a></li>
+                            <li class="breadcrumb-item active">News</li>
                         </ol>
                         <div class="card mb-4">
-                            <div class="card-body">
-                                Chart.js is a third party plugin that is used to generate the charts in this template. The charts below have been customized - for further customization options, please visit the official
-                                <a target="_blank" href="https://www.chartjs.org/docs/latest/">Chart.js documentation</a>
-                                .
+                            <h4 class="mb-4">Insert News</h4>
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                                
+                            <div class="mb-3">
+                               <label for="c_name" class="form-label">Category Name</label>
+                                <input type="text" class="form-control c_name" id="c_name" name="c_name" required>
                             </div>
+                            <div class="mb-3">
+                               <label for="c_icon" class="form-label">Category Icon</label>
+                                <input type="text" class="form-control c_icon" id="c_icon" name="c_icon" required>
+                            </div>
+                       <div class="mb-2">
+                       <button class=" btn btn-dark" type="submit" name="c_submit">Submit</button>
+                        <button class="btn btn-danger" type="reset">Reset</button>
+                       </div>
+
+            </form>
+            <div class="result">
+                <?php
+                echo  $result ;
+                
+                ?>
+            </div>
                         </div>
                         <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-chart-area me-1"></i>
-                                Area Chart Example
-                            </div>
-                            <div class="card-body"><canvas id="myAreaChart" width="100%" height="30"></canvas></div>
-                            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-bar me-1"></i>
-                                        Bar Chart Example
-                                    </div>
-                                    <div class="card-body"><canvas id="myBarChart" width="100%" height="50"></canvas></div>
-                                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-pie me-1"></i>
-                                        Pie Chart Example
-                                    </div>
-                                    <div class="card-body"><canvas id="myPieChart" width="100%" height="50"></canvas></div>
-                                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-                                </div>
+                           
+                            <div class="card-body">
+                                <h4>Catagory Info</h4>
+                                <table id="datatablesSimple">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Icon</th>   
+                                            <th>Action</th>   
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if ($s_sql -> num_rows>0){ ?>
+                                            <?php while ($final =  $s_sql -> fetch_assoc()) {  ?>
+                                        <tr>
+                                            <td><?php echo $final ['name']?></td>
+                                            <td><?php echo $final ['icon']?></td>
+                                            <td>
+                                                <a  class=" btn btn-dark"  href="c_edit.php?id=<?php echo $final ['id'];?>">Edit</a>
+                                                <a  class=" btn btn-danger" href="c_delete.php?id=<?php echo $final ['id'];?>">Delete</a>
+                                            </td>
+                                        </tr>
+                                        <?php }?>
+                                        <?php }else{ ?>
+                                        <tr>
+                                            <td colspan="2">No data to show</td>                   
+                                        </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -131,9 +186,7 @@
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="assets/demo/chart-area-demo.js"></script>
-        <script src="assets/demo/chart-bar-demo.js"></script>
-        <script src="assets/demo/chart-pie-demo.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+        <script src="js/datatables-simple-demo.js"></script>
     </body>
 </html>

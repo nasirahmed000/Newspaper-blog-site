@@ -90,8 +90,8 @@ $s_sql = $conn -> query($select_sql);
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 News
                             </a>
-                            <a class="nav-link" href="charts.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            <a class="nav-link " href="charts.html">
+                                <div  class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Charts
                             </a>
                         </div>
@@ -154,8 +154,8 @@ $s_sql = $conn -> query($select_sql);
                                             <td><?php echo $final ['name']?></td>
                                             <td><?php echo $final ['icon']?></td>
                                             <td>
-                                                <a href="c_edit.php?id=<?php echo $final ['id'];?>">Edit</a>
-                                                <a href="c_delete.php?id=<?php echo $final ['id'];?>">Delete</a>
+                                                <a  class=" btn btn-dark"  href="c_edit.php?id=<?php echo $final ['id'];?>">Edit</a>
+                                                <a  class=" btn btn-danger" href="c_delete.php?id=<?php echo $final ['id'];?>">Delete</a>
                                             </td>
                                         </tr>
                                         <?php }?>
