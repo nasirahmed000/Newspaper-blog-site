@@ -1,3 +1,15 @@
+<?php
+// db connection 
+include "lib/connection.php";
+$select_sql = "SELECT * FROM news WHERE c_id = 57";
+
+$s_sql = $conn -> query($select_sql);
+
+  
+
+
+
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -27,7 +39,7 @@
         <nav class="navbar navbar-expand-lg navbar-light">
           <div class="container-fluid">
             <!-- logo -->
-            <a class="navbar-brand logo" href="index.html"><h1 class="m-0">MyNews</h1></a>
+            <a class="navbar-brand logo" href="index.php"><h1 class="m-0">MyNews</h1></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -35,7 +47,7 @@
             <div class="collapse navbar-collapse menu" id="navbarSupportedContent">
               <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                  <a class="nav-link active" aria-current="page" href="index.php">Home</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">About</a>
@@ -45,6 +57,9 @@
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">FAQ</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Log In</a>
                 </li>
               </ul>
             </div>
@@ -152,30 +167,45 @@
           </div>
         </div>
         <div class="row">
+            <?php 
+            if ($s_sql -> num_rows > 0 )  {?>
+            <?php while ($final = $s_sql -> fetch_assoc()) {
+
+            ?>
           <div class="col-lg-4">
             <div class="c_news text-center">
-              <i class="fa fa-bug" aria-hidden="true"></i>
-              <h2>Lorem ipsum dolor.</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing, elit. Cupiditate, nulla architecto doloremque neque ducimus at esse provident minus, itaque suscipit.</p>
-              <a href="#" class="text-dark">read more</a>
+              <i class=" <?php echo $final  ['icon'];?>" aria-hidden="true"></i>
+              <h2> <?php echo $final  ['title'];?></h2>
+              <p> <?php
+
+                 $desc = $final  ['description'];
+                if(strlen($desc) >50 ){
+                echo substr($desc,0,150)." ". "...". "<br>";
+
+                echo "<a href = 'details.php?id= ".$final['id']."' class='text-dark d-block mt-3'>read more</a>";
+
+                }else{
+                  echo $desc;
+                }
+
+
+              ?></p>
+             
             </div>
           </div>
-          <div class="col-lg-4">
+          <?php }  ?> 
+
+        <?php }else{ ?>
+      
+          <div class="col-lg-12">
             <div class="c_news text-center">
-              <i class="fa fa-bug" aria-hidden="true"></i>
-              <h2>Lorem ipsum dolor.</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing, elit. Cupiditate, nulla architecto doloremque neque ducimus at esse provident minus, itaque suscipit.</p>
-              <a href="#" class="text-dark">read more</a>
+              
+              <h2>No data to show</h2>
+             
             </div>
           </div>
-          <div class="col-lg-4">
-            <div class="c_news text-center">
-              <i class="fa fa-bug" aria-hidden="true"></i>
-              <h2>Lorem ipsum dolor.</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing, elit. Cupiditate, nulla architecto doloremque neque ducimus at esse provident minus, itaque suscipit.</p>
-              <a href="#" class="text-dark">read more</a>
-            </div>
-          </div>
+        <?php }?> 
+         
         </div>
       </div>
     </section>
@@ -231,7 +261,7 @@
               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. consectetur adipisicing elit. </p>
               <hr class="w-25 m-auto">
             </div>
-          </div>
+          </div> 
         </div>
         <div class="row">
           <div class="col-lg-4">

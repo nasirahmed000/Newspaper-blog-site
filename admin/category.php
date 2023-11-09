@@ -86,7 +86,7 @@ $s_sql = $conn -> query($select_sql);
                                 <div class="sb-nav-link-icon "><i class="fas fa-table"></i></div>
                                 Category
                             </a>
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="news.php">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 News
                             </a>
@@ -142,6 +142,7 @@ $s_sql = $conn -> query($select_sql);
                                 <table id="datatablesSimple">
                                     <thead>
                                         <tr>
+                                            <th>Category id</th>
                                             <th>Name</th>
                                             <th>Icon</th>   
                                             <th>Action</th>   
@@ -151,6 +152,7 @@ $s_sql = $conn -> query($select_sql);
                                         <?php if ($s_sql -> num_rows>0){ ?>
                                             <?php while ($final =  $s_sql -> fetch_assoc()) {  ?>
                                         <tr>
+                                        <td><?php echo $final ['id']?></td>
                                             <td><?php echo $final ['name']?></td>
                                             <td><?php echo $final ['icon']?></td>
                                             <td>
@@ -161,7 +163,7 @@ $s_sql = $conn -> query($select_sql);
                                         <?php }?>
                                         <?php }else{ ?>
                                         <tr>
-                                            <td colspan="2">No data to show</td>                   
+                                            <td colspan="4">No data to show</td>                   
                                         </tr>
                                         <?php } ?>
                                     </tbody>
@@ -188,5 +190,10 @@ $s_sql = $conn -> query($select_sql);
         <script src="js/scripts.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
+        <script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
     </body>
 </html>

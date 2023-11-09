@@ -1,3 +1,19 @@
+<?php
+// db connection 
+include "lib/connection.php";
+
+if( isset($_GET ['id']) ){
+
+  $d_id = $_GET ['id'];
+  $select_sql = " SELECT * FROM news WHERE id = $d_id ";
+
+  $s_sql =  $conn -> query($select_sql);
+  
+  if ($s_sql -> num_rows > 0 ){
+
+    while ($final = $s_sql -> fetch_assoc()){
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -27,7 +43,7 @@
         <nav class="navbar navbar-expand-lg navbar-light">
           <div class="container-fluid">
             <!-- logo -->
-            <a class="navbar-brand logo" href="index.html"><h1 class="m-0">MyNews</h1></a>
+            <a class="navbar-brand logo" href="index.php"><h1 class="m-0">MyNews</h1></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -35,7 +51,7 @@
             <div class="collapse navbar-collapse menu" id="navbarSupportedContent">
               <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                  <a class="nav-link active" aria-current="page" href="index.php">Home</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">About</a>
@@ -45,6 +61,9 @@
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">FAQ</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Log In</a>
                 </li>
               </ul>
               
@@ -63,16 +82,15 @@
         <div class="row">
           <div class="col-lg-8">
             <div class="c_news text-left details">
-              <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+              <i class="<?php echo $final ['icon']; ?>" aria-hidden="true"></i>
               <ul class="list-inline">
                 <li class="list-inline-item"><a href="#">category</a></li>
                 <li class="list-inline-item"><a href="#">author</a></li>
               </ul>
-              <h2>Lorem ipsum dolor.</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing, elit. Cupiditate, nulla architecto doloremque neque ducimus at esse provident minus, itaque suscipit.</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing, elit. Cupiditate, nulla architecto doloremque neque ducimus at esse provident minus, itaque suscipit.</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing, elit. Cupiditate, nulla architecto doloremque neque ducimus at esse provident minus, itaque suscipit.</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing, elit. Cupiditate, nulla architecto doloremque neque ducimus at esse provident minus, itaque suscipit.</p>
+
+              <h2><?php echo $final ['title']; ?></h2>
+              <p> <?php echo $final ['description']; ?> </p>
+
             </div>
           </div>
           <div class="col-lg-4">
@@ -218,3 +236,14 @@
     <script src="vendor/js/script.js"></script>
   </body>
 </html>
+
+<?php
+    }
+  }else{
+    header("location:index.php");
+  }
+}else{
+  header("location:index.php");
+}
+
+?>

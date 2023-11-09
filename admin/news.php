@@ -1,34 +1,36 @@
 <?php
 // db connection 
 include "../lib/connection.php";
-
 // data insert 
-
 $result = null;
-if (isset($_POST['c_submit'])){
+if (isset($_POST['n_submit'])){
 
-    $name = $_POST['c_name'];
-    $icon = $_POST['c_icon'];
+    $title = $_POST['n_title'];
+    $icon = $_POST['n_icon'];
+    $desc = $_POST['n_desc'];
+    $pass  =md5( $_POST['n_pass']);
+    $cpass =md5( $_POST['c_pass']);
+    $c_id = $_POST['c_id'];
 
-    // echo $name ." ". $icon;
-
-    $insert_sql = "INSERT INTO category( name, icon) VALUES ('$name','$icon')";
-
-    if($conn -> query($insert_sql)){
-
-       $result = "<h3 class='text-success'>Data inserted successfully!</h3>";
+    if ($pass == $cpass){
+        // $result = "<h3 class='text-success'>Password matched</h3>";
+        $insert_sql = "INSERT INTO news( title, icon, description, pass, c_id) VALUES ('$title ','$icon','$desc' , '$pass', $c_id )";
+        if($conn -> query($insert_sql)) {
+            $result = "<h3 class='text-success'>Data inserted successfully</h3>";
+            
+        }else{
+            $conn -> error;        }
 
     }else{
-        die($conn -> error);
+        $result = "<h3 class='text-danger'>Password didn't matched</h3>";
     }
 }
 // select sql 
-$select_sql = "SELECT * FROM category ";
+$select_sql = "SELECT * FROM news";
 
 $s_sql = $conn -> query($select_sql);
 
 //  echo $s_sql -> num_rows;
-
 ?>
 
 <!DOCTYPE html>
@@ -82,11 +84,11 @@ $s_sql = $conn -> query($select_sql);
                             </a>
                             <div class="sb-sidenav-menu-heading">Pages</div>
                            
-                            <a class="nav-link active" href="category.php">
+                            <a class="nav-link " href="category.php">
                                 <div class="sb-nav-link-icon "><i class="fas fa-table"></i></div>
                                 Category
                             </a>
-                            <a class="nav-link" href="#">
+                            <a class="nav-link active" href="news.php">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 News
                             </a>
@@ -115,15 +117,33 @@ $s_sql = $conn -> query($select_sql);
             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                                 
                             <div class="mb-3">
-                               <label for="c_name" class="form-label">Category Name</label>
-                                <input type="text" class="form-control c_name" id="c_name" name="c_name" required>
+                               <label for="n_title" class="form-label">News title</label>
+                                <input type="text" class="form-control n_title" id="n_title" name="n_title" required>
                             </div>
                             <div class="mb-3">
-                               <label for="c_icon" class="form-label">Category Icon</label>
-                                <input type="text" class="form-control c_icon" id="c_icon" name="c_icon" required>
+                               <label for="n_icon" class="form-label">News icon</label>
+                                <input type="text" class="form-control n_icon" id="n_icon" name="n_icon" required>
                             </div>
+                            <div class="mb-3">
+                               <label for="n_desc" class="form-label">Description</label>
+                               <textarea name="n_desc" id="n_desc" class="form-control n_desc" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                               <label for="n_pass" class="form-label">Password</label>
+                                <input type="password" class="form-control n_pass" id="n_pass" name="n_pass" required>
+                            </div>
+                            <div class="mb-3">
+                               <label for="c_pass" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control c_pass" id="c_pass" name="c_pass" required>
+                            </div>
+                            <div class="mb-3">
+                               <label for="c_id" class="form-label">Category id</label>
+                                <input type="number" class="form-control c_id" id="c_id" name="c_id" required>
+                            </div>
+
+
                        <div class="mb-2">
-                       <button class=" btn btn-dark" type="submit" name="c_submit">Submit</button>
+                       <button class=" btn btn-dark" type="submit" name="n_submit">Submit</button>
                         <button class="btn btn-danger" type="reset">Reset</button>
                        </div>
 
@@ -142,8 +162,9 @@ $s_sql = $conn -> query($select_sql);
                                 <table id="datatablesSimple">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
+                                            <th>Title</th>
                                             <th>Icon</th>   
+                                            <th>Description</th>   
                                             <th>Action</th>   
                                         </tr>
                                     </thead>
@@ -151,17 +172,18 @@ $s_sql = $conn -> query($select_sql);
                                         <?php if ($s_sql -> num_rows>0){ ?>
                                             <?php while ($final =  $s_sql -> fetch_assoc()) {  ?>
                                         <tr>
-                                            <td><?php echo $final ['name']?></td>
+                                            <td><?php echo $final ['title']?></td>
                                             <td><?php echo $final ['icon']?></td>
+                                            <td><?php echo $final ['description']?></td>
                                             <td>
-                                                <a  class=" btn btn-dark"  href="c_edit.php?id=<?php echo $final ['id'];?>">Edit</a>
-                                                <a  class=" btn btn-danger" href="c_delete.php?id=<?php echo $final ['id'];?>">Delete</a>
+                                                <a  class=" btn btn-dark"  href="?id=<?php echo $final ['id'];?>">Edit</a>
+                                                <a  class=" btn btn-danger" href="?id=<?php echo $final ['id'];?>">Delete</a>
                                             </td>
                                         </tr>
                                         <?php }?>
                                         <?php }else{ ?>
                                         <tr>
-                                            <td colspan="2">No data to show</td>                   
+                                            <td colspan="4">No data to show</td>                   
                                         </tr>
                                         <?php } ?>
                                     </tbody>
@@ -188,5 +210,10 @@ $s_sql = $conn -> query($select_sql);
         <script src="js/scripts.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
+        <script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
     </body>
 </html>
